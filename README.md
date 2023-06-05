@@ -29,6 +29,7 @@ type creator struct{}
 func (c creator) Create(r any) (any, error) {
 	//do something with your r object
 	//maybe store in the Database
+	// call another service using the Rest Client CallService function
 	return "Something is created", nil
 }
 

@@ -3,6 +3,8 @@ package mocks
 import (
 	"bytes"
 	"errors"
+	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 
 	"github.com/labstack/echo/v4"
@@ -131,4 +133,30 @@ func NewContextMockResponse(statusCode int, errorMessage string) error {
 	e := echo.New()
 	c := e.NewContext(r, w)
 	return c.JSON(statusCode, errors.New(errorMessage))
+}
+
+type mockHTTP struct {
+	Fail bool
+}
+
+func NewMockHTTP(fail bool) mockHTTP {
+	return mockHTTP{
+		Fail: fail,
+	}
+}
+
+func NewMockHTTPResponse() *http.Response {
+	json := `{"result":"ok'"}`
+	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+	return &http.Response{
+		Body: r,
+	}
+}
+
+func (m mockHTTP) Do(req *http.Request) (*http.Response, error) {
+	if m.Fail {
+		return nil, errors.New("some error happened while calling the REST API")
+	}
+
+	return NewMockHTTPResponse(), nil
 }
