@@ -3,7 +3,7 @@ package mocks
 import (
 	"bytes"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 
@@ -147,7 +147,7 @@ func NewMockHTTP(fail bool) mockHTTP {
 
 func NewMockHTTPResponse() *http.Response {
 	json := `{"result":"ok'"}`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
 	return &http.Response{
 		Body: r,
 	}
